@@ -1,0 +1,26 @@
+{% extends '_layout.html' %}
+
+{% block title %} View profile {% endblock %}
+
+{% block content %}
+
+<h1>{{ result.first_name }} {{ result.last_name }}</h1>
+<h3>{{result.role}}</h3>
+
+<!--<p><a href="mailto:{{ result.email }}">{{ result.email }}</a></p>-->
+
+<img src="{{ url_for('static', filename='images/' + (result.avatar or 'default.png')) }}" style=" height:200px;">
+
+<p>
+    <a href="/edit?id={{ result.user_id }}">Edit</a>
+    <a href="/delete?id={{ result.user_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+</p>
+<p>
+    <a href="{{ url_for('list_subject') }}">Subject list</a>
+    <br>
+    <a href="{{ url_for('chosen_subject', user_id=session['user_id']) }}">My subjects</a>
+</p>
+{% if session['role'] == 'admin' %}
+<a href="{{ url_for('list_users') }}">View all users</a>
+{% endif %}
+{% endblock %}

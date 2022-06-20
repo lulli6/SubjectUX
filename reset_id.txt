@@ -1,0 +1,1 @@
+ALTER TABLE shrachar_movies.users AUTO_INCREMENT = 0; 

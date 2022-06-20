@@ -1,0 +1,22 @@
+{% extends '_layout.html' %}
+
+{% block title %} Subjects {% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>Subjects</th>
+
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.name }}</td>
+
+        <td><a href="/addsub?subject_id={{row.subject_id}}" onclick="return confirm('Add subject?')">Select</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('view_user', user_id=session['user_id']) }}">View your account</a>
+<br>
+<a href="{{ url_for('chosen_subject', user_id=session['user_id']) }}">My subjects</a>
+{% endblock %}

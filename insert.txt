@@ -1,0 +1,4 @@
+INSERT INTO users_movies (user_id, movie_id) 
+SELECT user_id, movie_id FROM users, movies 
+WHERE users.user_id = %s and movies.movie_id = %s
+SELECT * FROM users_movies;

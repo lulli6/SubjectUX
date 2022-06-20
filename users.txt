@@ -1,0 +1,11 @@
+user_id,first_name,last_name,email,password,role,avatar
+1,Popo,Lolo,yoyo@toto,momo,admin,NULL
+2,Anya,Forger,bond@man,peanuts,user,NULL
+3,Shoko,Komi,black@cat,kitty,user,NULL
+4,Hopop,Planter,farm@frog,polly,user,NULL
+5,Musashi,Miyamoto,swords@man,otsu,user,NULL
+6,Ichigo,Kurosaki,soul@reaper,orihime,user,NULL
+7,Jotaro,Joestar,star@platnium,jojo,user,NULL
+8,Marin,Kitagawa,cute@cosplay,gojo,user,NULL
+9,"Noé ",Archiviste,murr@vampire,vanitas,user,NULL
+10,Yuuji,Itadori,cursed@king,dogs,user,NULL
