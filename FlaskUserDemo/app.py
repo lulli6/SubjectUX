@@ -87,8 +87,8 @@ def add_user():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO users 
-                    (first_name, last_name, email, password, avatar)
-                    VALUES (%s, %s, %s, %s, %s)"""
+                    (first_name, last_name, email, password, avatar, role)
+                    VALUES (%s, %s, %s, %s, %s, "Student")"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
@@ -178,7 +178,7 @@ def add_subject():
 def delete_user():
     if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']: 
         flash("You don't have persmission to delete this user")
-        return redirect('/view?id=' + request.args['user_id'])
+        return redirect('/view?user_id=' + request.args['user_id'])
     with create_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
