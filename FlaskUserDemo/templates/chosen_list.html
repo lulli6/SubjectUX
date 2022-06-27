@@ -26,4 +26,9 @@
     <br>
     <a href="{{ url_for('view_user', user_id=session['user_id']) }}">View your account</a>
 </p>
+{% if session['role'] == 'admin' %}
+<a href="{{ url_for('list_subject') }}">Subjects </a>
+
+{% endif %}
+
 {% endblock %}
