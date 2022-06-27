@@ -4,9 +4,9 @@
 
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post">
     <input type="hidden" name="user_id" value="{{ result.user_id }}">
-    <input type="hidden" name="old_avatar" value="{{ result.avatar }}">
+
 
     <label for="first_name">First Name:</label>
     <input id="first_name" name="first_name" type="text" value="{{ result.first_name }}">
@@ -19,22 +19,9 @@
 
     <label for="password">Password:</label>
     <input id="password" name="password" type="password">
- 
-    <label for="pic">Profile picture:</label>
-    <input id="pic" type="file" name="avatar" accept="image/*">
 
-    <img src="{{ url_for('static', filename='images/' + (result.avatar or 'default.png')) }}">
 
     <input type="submit" value="Edit record">
 </form>
-<script>
-    let fileInput = document.querySelector("#pic");
-    let image = document.querySelector(".avatar");
 
-    fileInput.addEventListener("change", updateImage);
-
-    function updateImage() {
-        image.src = URL.createObjectURL(fileInput.files[0]);
-    }
-</script>
 {% endblock %}
