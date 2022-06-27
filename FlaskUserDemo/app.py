@@ -242,12 +242,17 @@ def edit_user():
 @app.route('/editsub')
 def edit_subject():
     with create_connection() as connection:
-            with connection.cursor() as cursor:
-                sql = "UPDATE subject SET subject = %s, WHERE subject_id = %s"
-                values = (request.form['subject'])
-                cursor.execute(sql, values)
-                connection.commit()
-    return redirect ('/view?user_id=' + str(session['user_id']))
+        with connection.cursor() as cursor:
+            sql = """UPDATE subject SET
+                subject = %s,
+            WHERE user_id = %s"""
+            values = (
+                request.form['subject']
+
+            )
+            cursor.execute(sql, values)
+            connection.commit()
+        return redirect('/edit?subject_id=' + request.form['subjectwa_id'])
 
 
 @app.route('/checkemail')
