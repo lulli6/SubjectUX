@@ -10,12 +10,11 @@
     </tr>
     {% for row in result %}
     <tr>
-        <td>{{ row.name }}</td>
-
+        <td>{{ row.subject }}</td>
         <td><a href="/addsub?subject_id={{row.subject_id}}" onclick="return confirm('Add subject?')">Select</a></td>
         {% if session['role'] == 'admin' %}
-        <td><a href="/edit?subject_id={{ row.subject_id }}">Edit</a>
-        <a href="/delete?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a></td>
+        <td><a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
+        <a href="/deletesub?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a></td>
         {% endif %}
     </tr>
     {% endfor %}

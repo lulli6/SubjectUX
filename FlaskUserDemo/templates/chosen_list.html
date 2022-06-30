@@ -13,7 +13,7 @@
     </tr>
     {% for row in result %}
     <tr>
-        <td>{{ row.name }}</td>
+        <td>{{ row.subject }}</td>
 
         <td>
             <a href="/deletesub?subject_id={{row.subject_id}}" onclick="return confirm('Are you sure?')">Delete</a>

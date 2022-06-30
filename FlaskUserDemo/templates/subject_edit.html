@@ -5,13 +5,13 @@
 {% block content %}
 
 <form method="post">
-    <input type="hidden" name="user_id" value="{{ result.subject_id }}">
+    <input type="hidden" name="subject_id" value="{{ result.subject_id }}">
 
     <label for="subject">Subject:</label>
     <input id="subject" name="subject" type="text" value="{{ result.subject }}">
 
 
-    <input type="submit" value="Edit record">
+    <input type="submit" value="Edit subject">
 </form>
 
 {% endblock %}

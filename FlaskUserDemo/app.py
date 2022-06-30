@@ -87,8 +87,8 @@ def add_user():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO users 
-                    (first_name, last_name, email, password, avatar, role)
-                    VALUES (%s, %s, %s, %s, %s, "Student")"""
+                    (first_name, last_name, email, password, avatar)
+                    VALUES (%s, %s, %s, %s, %s)"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
@@ -103,7 +103,24 @@ def add_user():
                     flash('Email has already been taken.')
                     return redirect('/register')
 
+# Login in the user after they sign up and take them to their profile page
+                sql = """SELECT * FROM users WHERE email = %s AND password = %s"""
+                values = (
+                    request.form['email'],
+                    encrypted_password
+                )
+                cursor.execute(sql, values)
+                result = cursor.fetchone()
+
+            if result:
+                session['logged_in'] = True
+                session['first_name'] = result['first_name']
+                session['role'] = result['role']
+                session['user_id'] = result['user_id']
+                return redirect (url_for('view_user', user_id=session['user_id']))
+
     return render_template('users_add.html')
+
 
 @app.route('/dashboard')
 def list_users():
@@ -144,8 +161,9 @@ def chosen_subject():
             result = cursor.fetchall()
     return render_template('chosen_list.html', result=result)
 
+
 @app.route('/addsub')
-def add_subject():
+def add_sub():
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) """
@@ -155,7 +173,31 @@ def add_subject():
             )
             cursor.execute(sql, values)
             connection.commit()
-    return redirect ('/chose?user_id=' + str(session['user_id']))    
+    return redirect ('/chosen?user_id=' + str(session['user_id']))    
+
+
+@app.route('/addsubject', methods=['GET', 'POST'])
+def add_subject():
+    if request.method == 'POST':
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """INSERT INTO subject 
+                    (subject) 
+                    VALUES (%s)"""
+                values = (
+                    request.form['subject']
+                )
+                try:
+                    cursor.execute(sql, values)
+                    connection.commit()
+                except pymysql.err.IntegrityError:
+                    flash('Subject name has already exist.')
+                    return redirect ('/addsubject')
+                cursor.execute(sql, values)
+                connection.commit()
+        
+
+    return render_template ('subject_add.html')
 
 # TODO: Add a '/delete_user' route that uses DELETE
 @app.route('/delete')
@@ -167,16 +209,16 @@ def delete_user():
             with connection.cursor() as cursor:
                 cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
                 connection.commit()
-                session.clear()
-    return redirect ('/')
+                
+    return redirect ('/dashboard')
 
 @app.route('/deletesub')
 def delete_subject():
     with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM users_subject WHERE subject_id=%s", request.args['subject_id'])
+                cursor.execute("DELETE FROM subject WHERE subject_id=%s", request.args['subject_id'])
                 connection.commit()
-    return redirect ('/chosen?user_id=' + str(session['user_id']))
+    return redirect ('/deletesub?subject_id=' + request.args['subject_id'])
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit_user():
@@ -219,25 +261,31 @@ def edit_user():
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM users WHERE user_id = %s", request.args['id'])
+                cursor.execute("SELECT * FROM users WHERE user_id = %s", request.args['user_id'])
                 result = cursor.fetchone()
         return render_template('users_edit.html', result=result)
 
-@app.route('/editsub')
+@app.route('/editsub', methods=['GET', 'POST'])
 def edit_subject():
-    with create_connection() as connection:
-        with connection.cursor() as cursor:
-            sql = """UPDATE subject SET
-                subject = %s,
-            WHERE user_id = %s"""
-            values = (
-                request.form['subject']
-
-            )
-            cursor.execute(sql, values)
-            connection.commit()
-        return redirect('/edit?subject_id=' + request.form['subjectwa_id'])
-
+    if request.method == 'POST':
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                sql = """UPDATE subject SET
+                    subject = %s
+                WHERE subject_id = %s"""
+                values = (
+                    request.form['subject'],
+                    request.form['subject_id']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+            return redirect('/editsub?subject_id=' + request.form['subject_id'])
+    else:
+        with create_connection() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM subject WHERE subject_id = %s", request.args['subject_id'])
+                result = cursor.fetchone()
+        return render_template('subject_edit.html', result=result)
 
 @app.route('/checkemail')
 def check_email():
