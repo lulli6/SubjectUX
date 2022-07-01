@@ -48,6 +48,7 @@
     <Content Include="templates\users_list.html" />
     <Content Include="templates\users_view.html" />
     <Content Include="templates\chosen_list.html" />
+    <Content Include="templates\user_subjectlist.html" />
     <Content Include="templates\_layout.html" />
   </ItemGroup>
   <ItemGroup>

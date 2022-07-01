@@ -138,6 +138,11 @@ def list_subject():
             result = cursor.fetchall()
     return render_template('subject_list.html', result=result)
 
+
+
+
+
+
 @app.route('/view')
 def view_user():
     with create_connection() as connection:
@@ -181,9 +186,7 @@ def add_subject():
     if request.method == 'POST':
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                sql = """INSERT INTO subject 
-                    (subject) 
-                    VALUES (%s)"""
+                sql = """INSERT INTO subject (subject) VALUES (%s)"""
                 values = (
                     request.form['subject']
                 )
@@ -193,9 +196,8 @@ def add_subject():
                 except pymysql.err.IntegrityError:
                     flash('Subject name has already exist.')
                     return redirect ('/addsubject')
-                cursor.execute(sql, values)
-                connection.commit()
-        
+
+        return redirect('/subject')
 
     return render_template ('subject_add.html')
 
@@ -218,6 +220,7 @@ def delete_subject():
             with connection.cursor() as cursor:
                 cursor.execute("DELETE FROM subject WHERE subject_id=%s", request.args['subject_id'])
                 connection.commit()
+            return redirect('/subject')
     return redirect ('/deletesub?subject_id=' + request.args['subject_id'])
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -279,13 +282,13 @@ def edit_subject():
                 )
                 cursor.execute(sql, values)
                 connection.commit()
-            return redirect('/editsub?subject_id=' + request.form['subject_id'])
+            return redirect('/subject')
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM subject WHERE subject_id = %s", request.args['subject_id'])
                 result = cursor.fetchone()
-        return render_template('subject_edit.html', result=result)
+    return render_template('subject_edit.html', result=result)
 
 @app.route('/checkemail')
 def check_email():
