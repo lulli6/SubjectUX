@@ -6,8 +6,6 @@ app = Flask(__name__)
 from utils import create_connection, setup
 app.register_blueprint(setup)
 
-
-
 @app.before_request
 def restrict():
 
@@ -207,23 +205,36 @@ def chosen_subject():
 def add_sub():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = """SELECT COUNT(*) as count FROM users_subject WHERE user_id = %s;"""
-            values = (
-                session['user_id']
-                )
-            
-            cursor.execute(sql, values)
-            count = cursor.fetchone()['count']
-            if int(count) < 5:
-                sql = """INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) """
+            today = datetime.date.today()
+            cutoff = datetime.date(2022, 7, 7)
+            if today < cutoff == True:
+                sql = """SELECT COUNT(*) as count FROM users_subject WHERE user_id = %s"""
                 values = (
-                    session['user_id'],
-                    request.args['subject_id']
-                )
+                    session['user_id']
+                    )
+            
                 cursor.execute(sql, values)
-                connection.commit()
-            else: 
-                flash("You already have 5 subjects!")
+                count = cursor.fetchone()['count']
+                if int(count) < 5:
+                    sql = """INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) """
+                    values = (
+                        session['user_id'],
+                        request.args['subject_id']
+                    )
+                    try:
+                        cursor.execute(sql, values)
+                        connection.commit()
+                    except pymysql.err.IntegrityError:
+                        flash('Subject has already been selected.')
+                        return redirect ('/subject')
+                    cursor.execute(sql, values)
+                    connection.commit()
+                else: 
+                    flash("You already have 5 subjects!")
+            else:
+                flash("Selection time ended")
+                return redirect ('/subject')
+                
     return redirect ('/chosen?user_id=' + str(session['user_id']))    
 
 #add new subjects
