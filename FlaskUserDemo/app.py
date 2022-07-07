@@ -1,4 +1,4 @@
-import uuid, os, hashlib, pymysql
+import uuid, os, hashlib, pymysql, datetime
 from flask import Flask, request, render_template, redirect, url_for, session, abort, flash, jsonify
 app = Flask(__name__)
 
@@ -20,7 +20,8 @@ def restrict():
         'list_subject',
         'edit_subject',
         'edit_subject',
-        'delete_subject'
+        'delete_subject',
+        'view_usersubject'
         ]
     admin_only = [
         'list_users'
@@ -56,7 +57,7 @@ def login():
                 session['first_name'] = result['first_name']
                 session['role'] = result['role']
                 session['user_id'] = result['user_id']
-                return redirect (url_for('view_user', user_id=session['user_id']))
+                return redirect (url_for('chosen_subject', user_id=session['user_id']))
             else:
                 flash("Invalid username or password.")
                 return redirect('/login')
@@ -117,7 +118,7 @@ def add_user():
                 session['first_name'] = result['first_name']
                 session['role'] = result['role']
                 session['user_id'] = result['user_id']
-                return redirect (url_for('view_user', user_id=session['user_id']))
+                return redirect (url_for('chosen_subject', user_id=session['user_id']))
 
     return render_template('users_add.html')
 
@@ -201,20 +202,31 @@ def chosen_subject():
     return render_template('chosen_list.html', result=result, student=student)
 
 
+#add subject for chosen list
 @app.route('/addsub')
 def add_sub():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            sql = """INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) """
+            sql = """SELECT COUNT(*) as count FROM users_subject WHERE user_id = %s;"""
             values = (
-                session['user_id'],
-                request.args['subject_id']
-            )
+                session['user_id']
+                )
+            
             cursor.execute(sql, values)
-            connection.commit()
+            count = cursor.fetchone()['count']
+            if int(count) < 5:
+                sql = """INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) """
+                values = (
+                    session['user_id'],
+                    request.args['subject_id']
+                )
+                cursor.execute(sql, values)
+                connection.commit()
+            else: 
+                flash("You already have 5 subjects!")
     return redirect ('/chosen?user_id=' + str(session['user_id']))    
 
-
+#add new subjects
 @app.route('/addsubject', methods=['GET', 'POST'])
 def add_subject():
     if request.method == 'POST':

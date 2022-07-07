@@ -11,7 +11,9 @@
     {% for row in result %}
     <tr>
         <td>{{ row.subject }}</td>
-        <td><a href="/addsub?subject_id={{row.subject_id}}" onclick="return confirm('Add subject?')">Select</a></td>
+
+        <td><a href="/addsub?subject_id={{ row.subject_id }}" onclick="return confirm('Add subject?')">Select</a></td>
+
         {% if session['role'] == 'admin' %}
         <td>
             <a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
