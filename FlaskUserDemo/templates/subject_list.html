@@ -13,8 +13,12 @@
         <td>{{ row.subject }}</td>
         <td><a href="/addsub?subject_id={{row.subject_id}}" onclick="return confirm('Add subject?')">Select</a></td>
         {% if session['role'] == 'admin' %}
-        <td><a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
-        <a href="/deletesub?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a></td>
+        <td>
+            <a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
+            <a href="/deletesub?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+            <a href="/viewstudent?subject_id={{ row.subject_id }}">Students of this subject</a>
+        </td>
+        
         {% endif %}
     </tr>
     {% endfor %}
@@ -26,9 +30,6 @@
 {% if session['role'] == 'admin' %}
 <a href="{{ url_for('add_subject') }}">Add subject </a>
 <a href="{{ url_for('list_subject') }}">Subjects </a>
-
-{% elif 'logged_in' in session %}
-<a href="{{ url_for('view_user', user_id=session['user_id']) }}">View your account</a>
 
 {% endif %}
 

@@ -151,8 +151,35 @@ def view_user():
             result = cursor.fetchone()
     return render_template('users_view.html', result=result)
 
+@app.route('/viewstudent')
+def view_usersubject():
+    with create_connection() as connection:
+        with connection.cursor() as cursor:
+            sql = """SELECT * From users 
+                     JOIN users_subject ON users_subject.user_id=users.user_id
+                     JOIN subject ON subject.subject_id=users_subject.subject_id
+                     where subject.subject_id=%s"""
+            values = (
+                request.args['subject_id']
+                )
+            cursor.execute(sql, values)
+            result = cursor.fetchall()
+
+            sql = """SELECT * FROM subject
+                     WHERE subject.subject_id = %s"""
+            values = (
+                request.args['subject_id']
+                )
+            cursor.execute(sql, values)
+            subject = cursor.fetchone()
+    return render_template('users_subject.html', result=result, subject=subject)
+
 @app.route('/chosen')
 def chosen_subject():
+    if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']: 
+        flash("You don't have persmission to view the chosen subject for this user")
+        return redirect('/chosen?user_id=' + str(session['user_id']))
+
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT * FROM users
@@ -164,7 +191,14 @@ def chosen_subject():
                 )
             cursor.execute(sql, values)
             result = cursor.fetchall()
-    return render_template('chosen_list.html', result=result)
+            sql = """SELECT * FROM users
+                     WHERE users.user_id = %s"""
+            values = (
+                request.args['user_id']
+                )
+            cursor.execute(sql, values)
+            student = cursor.fetchone()
+    return render_template('chosen_list.html', result=result, student=student)
 
 
 @app.route('/addsub')
@@ -218,7 +252,7 @@ def delete_user():
 def delete_subject():
     with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM subject WHERE subject_id=%s", request.args['subject_id'])
+                cursor.execute("DELETE FROM users_subject WHERE subject_id=%s", request.args['subject_id'])
                 connection.commit()
             return redirect('/subject')
     return redirect ('/deletesub?subject_id=' + request.args['subject_id'])
