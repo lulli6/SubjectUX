@@ -17,7 +17,7 @@
         {% if session['role'] == 'admin' %}
         <td>
             <a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
-            <a href="/deletesub?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+            <a href="/deletesubject?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
             <a href="/viewstudent?subject_id={{ row.subject_id }}">Students of this subject</a>
         </td>
         

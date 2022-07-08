@@ -1,0 +1,37 @@
+{% extends '_layout.html' %}
+
+{% block title %} Students of subject {% endblock %}
+
+{% block content %}
+
+<h1>{{subject.subject}}'s Students</h1>
+
+<table>
+    <tr>
+        <th>Students</th>
+
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td>{{ row.first_name }}</td>
+        <td>{{ row.last_name }}</td>
+        <td>{{ row.email }}</td>
+
+        <td>
+            <a href="/view?user_id={{ row.user_id }}">View</a>
+            <a href="/edit?user_id={{ row.user_id }}">Edit</a>
+            <a href="/delete?user_id={{ row.user_id }}" onclick="return confirm('Are you sure?')">Delete</a>
+            <a href="/chosen?user_id={{ row.user_id }}">Chosen subjects</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<p>
+    <a href="{{ url_for('list_subject') }}">Subject list</a>
+    <br>
+    <a href="{{ url_for('view_user', user_id=session['user_id']) }}">View your account</a>
+
+</p>
+
+
+{% endblock %}
