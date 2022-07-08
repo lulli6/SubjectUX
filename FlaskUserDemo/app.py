@@ -203,11 +203,21 @@ def chosen_subject():
 #add subject for chosen list
 @app.route('/addsub')
 def add_sub():
+    today = datetime.date.today()
+    startdate = datetime.date(2022, 7, 9)
+    cutoff = datetime.date(2022, 7, 31)
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            today = datetime.date.today()
-            cutoff = datetime.date(2022, 7, 7)
-            if today < cutoff == True:
+            
+            if today > cutoff:
+
+                flash("Selection time ended. ")
+                return redirect ('/subject')
+            elif startdate > today: 
+                flash("Selection time hasn't started. ")
+                flash("You can't select subjects until " + str(startdate))
+                return redirect ('/subject')
+            else: 
                 sql = """SELECT COUNT(*) as count FROM users_subject WHERE user_id = %s"""
                 values = (
                     session['user_id']
@@ -227,13 +237,10 @@ def add_sub():
                     except pymysql.err.IntegrityError:
                         flash('Subject has already been selected.')
                         return redirect ('/subject')
-                    cursor.execute(sql, values)
-                    connection.commit()
+                    
                 else: 
                     flash("You already have 5 subjects!")
-            else:
-                flash("Selection time ended")
-                return redirect ('/subject')
+            
                 
     return redirect ('/chosen?user_id=' + str(session['user_id']))    
 
@@ -343,9 +350,11 @@ def edit_subject():
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM subject WHERE subject_id = %s", request.args['subject_id'])
+                cursor.execute("""SELECT * FROM subject WHERE subject_id = %s",
+                request.args['subject_id']""")
                 result = cursor.fetchone()
     return render_template('subject_edit.html', result=result)
+
 
 @app.route('/checkemail')
 def check_email():
@@ -358,9 +367,9 @@ def check_email():
             cursor.execute(sql, values)
             result = cursor.fetchone()
     if result:
-        return jsonify({ 'status': 'Error' })
+        return jsonify({'status': 'Error'})
     else:
-        return jsonify({ 'status': 'OK' })
+        return jsonify({'status': 'OK'})
 
 if __name__ == '__main__':
     import os
