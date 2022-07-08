@@ -1,2 +1,0 @@
-INSERT INTO users_movies (user_id, movie_id) SELECT user_id, movie_id FROM users, movies WHERE users.user_id = "1" and movies.movie_id = "1";
-SELECT * FROM shrachar_movies.users_movies;

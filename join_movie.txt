@@ -1,3 +1,0 @@
-SELECT * FROM users
-JOIN users_movies ON users_movies.user_id = users.user_id
-JOIN movies ON movies.movie_id = users_movies.movie_id;

@@ -1,5 +1,6 @@
 import uuid, os, hashlib, pymysql, datetime
-from flask import Flask, request, render_template, redirect, url_for, session, abort, flash, jsonify
+from flask import Flask, request, render_template, redirect
+from flask import Flask, url_for, session, abort, flash, jsonify
 app = Flask(__name__)
 
 # Register the setup page and import create_connection()
@@ -9,22 +10,21 @@ app.register_blueprint(setup)
 
 @app.before_request
 def restrict():
-
     restricted_pages = [
-        'list_users',
         'view_user',
         'edit_user',
         'delete_user',
-        'add_subject'
+        'add_sub',
+        'delete_sub'
+        ]
+    admin_only = [
+        'list_users',
         'list_subject',
+        'add_subject',
         'edit_subject',
         'edit_subject',
         'delete_subject',
         'view_usersubject'
-        ]
-    admin_only = [
-        'list_users'
-        'list_subject'
     ]
     if 'logged_in' not in session and request.endpoint in restricted_pages:
         flash("You are not logged in!")
@@ -122,7 +122,6 @@ def add_user():
                 session['role'] = result['role']
                 session['user_id'] = result['user_id']
                 return redirect(url_for('chosen_subject', user_id=session['user_id']))
-
     return render_template('users_add.html')
 
 
@@ -148,7 +147,9 @@ def list_subject():
 def view_user():
     with create_connection() as connection:
         with connection.cursor() as cursor:
-            cursor.execute("""SELECT * FROM users WHERE user_id = %s""", request.args['user_id'])
+            sql = """SELECT * FROM users WHERE user_id = %s"""
+            values = (request.args['user_id'])
+            cursor.execute(sql, values)
             result = cursor.fetchone()
     return render_template('users_view.html', result=result)
 
@@ -180,7 +181,7 @@ def view_usersubject():
 @app.route('/chosen')
 def chosen_subject():
     if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
-        flash("You don't have persmission to view the chosen subject for this user")
+        flash("You don't have persmission to view the subject for this user")
         return redirect('/chosen?user_id=' + str(session['user_id']))
 
     with create_connection() as connection:
@@ -208,7 +209,7 @@ def chosen_subject():
 @app.route('/addsub')
 def add_sub():
     today = datetime.date.today()
-    startdate = datetime.date(2022, 7, 9)
+    startdate = datetime.date(2022, 7, 8)
     cutoff = datetime.date(2022, 7, 31)
     with create_connection() as connection:
         with connection.cursor() as cursor:
@@ -220,14 +221,16 @@ def add_sub():
                 flash("You can't select subjects until " + str(startdate))
                 return redirect('/subject')
             else:
-                sql = """SELECT COUNT(*) as count FROM users_subject WHERE user_id = %s"""
+                sql = """SELECT COUNT(*) as count FROM users_subject
+                WHERE user_id = %s"""
                 values = (
                     session['user_id']
                     )
                 cursor.execute(sql, values)
                 count = cursor.fetchone()['count']
                 if int(count) < 5:
-                    sql = "INSERT INTO users_subject (user_id, subject_id) VALUES (%s, %s) "
+                    sql = """INSERT INTO users_subject (user_id, subject_id)
+                    VALUES (%s, %s)"""
                     values = (
                         session['user_id'],
                         request.args['subject_id']
@@ -272,9 +275,11 @@ def delete_user():
         flash("You don't have persmission to delete this user")
         return redirect('/view?user_id=' + request.args['user_id'])
     with create_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM users WHERE user_id=%s", request.args['user_id'])
-                connection.commit()
+        with connection.cursor() as cursor:
+            sql = "DELETE FROM users WHERE user_id=%s"
+            values = (request.args['user_id'])
+            cursor.execute(sql, values)
+            connection.commit()
     return redirect('/dashboard')
 
 
@@ -282,21 +287,23 @@ def delete_user():
 @app.route('/deletesub')
 def delete_sub():
     with create_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM users_subject WHERE subject_id=%s", request.args['subject_id'])
-                connection.commit()
-            return redirect('/subject')
-    return redirect('/deletesub?subject_id=' + request.args['subject_id'])
+        with connection.cursor() as cursor:
+            sql = """DELETE FROM users_subject WHERE subject_id=%s"""
+            values = (request.args['subject_id'])
+            cursor.execute(sql, values)
+            connection.commit()
+    return redirect('/subject')
 
 
 @app.route('/deletesubject')
 def delete_subject():
     with create_connection() as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM subject WHERE subject_id=%s", request.args['subject_id'])
-                connection.commit()
-            return redirect('/subject')
-    return redirect('/deletesubject?subject_id=' + request.args['subject_id'])
+        with connection.cursor() as cursor:
+            sql = """DELETE FROM subject WHERE subject_id=%s"""
+            values = (request.args['subject_id'])
+            cursor.execute(sql, values)
+            connection.commit()
+    return redirect('/subject')
 
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -339,7 +346,9 @@ def edit_user():
     else:
         with create_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM users WHERE user_id = %s", request.args['user_id'])
+                sql = "SELECT * FROM users WHERE user_id = %s"
+                values = (request.args['user_id'])
+                cursor.execute(sql, values)
                 result = cursor.fetchone()
         return render_template('users_edit.html', result=result)
 
