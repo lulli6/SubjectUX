@@ -154,6 +154,9 @@ def list_subject():
 
 @app.route('/view')
 def view_user():
+    if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
+        flash("You don't have permission to view other users.")
+        return redirect('/view?user_id=' + str(session['user_id']))
     with create_connection() as connection:
         with connection.cursor() as cursor:
             sql = """SELECT * FROM users WHERE user_id = %s"""
@@ -187,10 +190,11 @@ def view_usersubject():
     return render_template('users_subject.html', result=result, subject=subject)
 
 
+
 @app.route('/chosen')
 def chosen_subject():
     if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
-        flash("You don't have persmission to view the subject for this user")
+        flash("You don't have persmission to view the subject for other users")
         return redirect('/chosen?user_id=' + str(session['user_id']))
 
     with create_connection() as connection:
