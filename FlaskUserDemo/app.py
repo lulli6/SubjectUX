@@ -11,6 +11,12 @@ app.register_blueprint(setup)
 @app.before_request
 def restrict():
     restricted_pages = [
+        'list_users',
+        'list_subject',
+        'add_subject',
+        'edit_subject',
+        'delete_subject',
+        'view_usersubject',
         'view_user',
         'edit_user',
         'delete_user',
@@ -19,16 +25,19 @@ def restrict():
         ]
     admin_only = [
         'list_users',
-        'list_subject',
         'add_subject',
         'edit_subject',
-        'edit_subject',
         'delete_subject',
-        'view_usersubject'
+        'view_usersubject',
+        'add_sub',
+        'delete_sub'
     ]
     if 'logged_in' not in session and request.endpoint in restricted_pages:
         flash("You are not logged in!")
         return redirect('/login')
+    elif 'loggged_in' in session and session['role'] != 'admin' and request.endpoint in admin_only:
+        flash("You don't have permission!")
+        return redirect('/subject')
 
 
 @app.route('/')
