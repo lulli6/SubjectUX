@@ -190,7 +190,6 @@ def view_usersubject():
     return render_template('users_subject.html', result=result, subject=subject)
 
 
-
 @app.route('/chosen')
 def chosen_subject():
     if session['role'] != 'admin' and str(session['user_id']) != request.args['user_id']:
