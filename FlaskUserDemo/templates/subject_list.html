@@ -27,11 +27,12 @@
 </table>
 <a href="{{ url_for('view_user', user_id=session['user_id']) }}">View your account</a>
 <br>
+{% if session['role'] != 'admin' %}
 <a href="{{ url_for('chosen_subject', user_id=session['user_id']) }}">My subjects</a>
 
-{% if session['role'] == 'admin' %}
+{% elif session['role'] == 'admin' %}
 <a href="{{ url_for('add_subject') }}">Add subject </a>
-<a href="{{ url_for('list_subject') }}">Subjects </a>
+
 
 {% endif %}
 

@@ -67,7 +67,7 @@ def login():
                 session['first_name'] = result['first_name']
                 session['role'] = result['role']
                 session['user_id'] = result['user_id']
-                return redirect(url_for('chosen_subject', user_id=session['user_id']))
+                return redirect(url_for('view_user', user_id=session['user_id']))
             else:
                 flash("Invalid username or password.")
                 return redirect('/login')
@@ -100,14 +100,15 @@ def add_user():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO users
-                    (first_name, last_name, email, password, avatar)
-                    VALUES (%s, %s, %s, %s, %s)"""
+                    (first_name, last_name, email, password, avatar, 'student')
+                    VALUES (%s, %s, %s, %s, %s, %s)"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
                     request.form['email'],
                     encrypted_password,
-                    avatar_filename
+                    avatar_filename,
+                    request.form['role']
                 )
                 try:
                     cursor.execute(sql, values)
@@ -130,7 +131,7 @@ def add_user():
                 session['first_name'] = result['first_name']
                 session['role'] = result['role']
                 session['user_id'] = result['user_id']
-                return redirect(url_for('chosen_subject', user_id=session['user_id']))
+                return redirect(url_for('view_user', user_id=session['user_id']))
     return render_template('users_add.html')
 
 

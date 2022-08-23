@@ -7,7 +7,7 @@
 <h1>{{ result.first_name }} {{ result.last_name }}</h1>
 <h3>{{result.role}}</h3>
 
-<!--<p><a href="mailto:{{ result.email }}">{{ result.email }}</a></p>-->
+
 
 <img src="{{ url_for('static', filename='images/' + (result.avatar or 'default.png')) }}" style=" height:200px;">
 
@@ -18,9 +18,10 @@
 
 <a href="{{ url_for('list_subject') }}">Subject list</a>
 <br>
+{% if session['role'] != 'admin' %}
 <a href="{{ url_for('chosen_subject', user_id=session['user_id']) }}">My subjects</a>
 <br>
-{% if session['role'] == 'admin' %}
+{% elif session['role'] == 'admin' %}
 <a href="{{ url_for('list_users') }}">View all users</a>
 {% endif %}
 {% endblock %}
