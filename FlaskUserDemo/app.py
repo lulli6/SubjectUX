@@ -100,15 +100,15 @@ def add_user():
         with create_connection() as connection:
             with connection.cursor() as cursor:
                 sql = """INSERT INTO users
-                    (first_name, last_name, email, password, avatar, 'student')
-                    VALUES (%s, %s, %s, %s, %s, %s)"""
+                    (first_name, last_name, email, password, avatar, role)
+                    VALUES (%s, %s, %s, %s, %s, "student")"""
                 values = (
                     request.form['first_name'],
                     request.form['last_name'],
                     request.form['email'],
                     encrypted_password,
-                    avatar_filename,
-                    request.form['role']
+                    avatar_filename
+
                 )
                 try:
                     cursor.execute(sql, values)
