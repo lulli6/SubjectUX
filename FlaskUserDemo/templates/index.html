@@ -7,12 +7,4 @@
 <br>
 <a href="{{ url_for('add_user') }}">Sign Up</a>
 
-{% if session['role'] == 'admin' %}
-<a href="{{ url_for('list_subject') }}">Subjects </a>
-
-{% elif 'logged_in' in session %}
-<a href="{{ url_for('view_user', iduser=session['iduser']) }}">View your account</a>
-
-{% endif %}
-
 {% endblock %}

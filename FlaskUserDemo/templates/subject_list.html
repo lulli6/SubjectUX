@@ -6,12 +6,12 @@
 <table>
     <tr>
         <th>Subjects</th>
-
+        <th>Description</th>
     </tr>
     {% for row in result %}
     <tr>
         <td>{{ row.subject }}</td>
-
+        <td>{{ row.description }}</td>
         <td><a href="/addsub?subject_id={{ row.subject_id }}" onclick="return confirm('Add subject?')">Select</a></td>
 
         {% if session['role'] == 'admin' %}
@@ -20,7 +20,7 @@
             <a href="/deletesubject?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
             <a href="/viewstudent?subject_id={{ row.subject_id }}">Students of this subject</a>
         </td>
-        
+
         {% endif %}
     </tr>
     {% endfor %}
