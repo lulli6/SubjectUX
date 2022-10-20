@@ -1,0 +1,3 @@
+\\internal.pakuranga.school.nz\users\home\students\lulli\Documents\13COM\Python\Flask\subject final code testing\FlaskUserDemo\obj\Any CPU\Debug\SubjectSelection.pyproj.CoreCompileInputs.cache
+\\internal.pakuranga.school.nz\users\home\students\lulli\Documents\13COM\Python\Flask\subject 91901ux\FlaskUserDemo\obj\Any CPU\Debug\SubjectSelection.pyproj.CoreCompileInputs.cache
+H:\13COM\Python\Flask\subject 91901ux\FlaskUserDemo\obj\Any CPU\Debug\SubjectSelection.pyproj.CoreCompileInputs.cache
