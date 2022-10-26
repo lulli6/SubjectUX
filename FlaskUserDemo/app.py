@@ -35,7 +35,7 @@ def restrict():
     if 'logged_in' not in session and request.endpoint in restricted_pages:
         flash("You are not logged in!")
         return redirect('/login')
-    elif 'loggged_in' in session and session['role'] != 'admin' and request.endpoint in admin_only:
+    elif 'logged_in' in session and session['role'] != 'admin' and request.endpoint in admin_only:
         flash("You don't have permission!")
         return redirect('/subject')
 

@@ -3,7 +3,7 @@
 {% block title %} Subjects {% endblock %}
 
 {% block content %}
-<table>
+<table class="table">
     <tr>
         <th>Subjects</th>
         <th>Description</th>
@@ -12,13 +12,14 @@
     <tr>
         <td>{{ row.subject }}</td>
         <td>{{ row.description }}</td>
-        <td><a href="/addsub?subject_id={{ row.subject_id }}" onclick="return confirm('Add subject?')">Select</a></td>
+        {% if session['role'] != 'admin' %}
+        <td><a href="/addsub?subject_id={{ row.subject_id }}" onclick="return confirm('Add subject?')" class="btn btn-success">Select</a></td>
 
-        {% if session['role'] == 'admin' %}
+        {% elif session['role'] == 'admin' %}
         <td>
-            <a href="/editsub?subject_id={{ row.subject_id }}">Edit</a>
-            <a href="/deletesubject?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')">Delete</a>
-            <a href="/viewstudent?subject_id={{ row.subject_id }}">Students of this subject</a>
+            <a href="/editsub?subject_id={{ row.subject_id }}" class="btn btn-primary">Edit</a>
+            <a href="/deletesubject?subject_id={{ row.subject_id }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">Delete</a>
+            <a href="/viewstudent?subject_id={{ row.subject_id }}" class="btn btn-secondary">Students of this subject</a>
         </td>
 
         {% endif %}

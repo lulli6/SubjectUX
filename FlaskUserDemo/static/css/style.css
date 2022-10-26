@@ -35,6 +35,9 @@ th, td {
     text-align: center;
 }
 
+tr {
+    align-content:center;
+}
 
 button {
     border: none;
