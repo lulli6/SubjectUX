@@ -3,28 +3,33 @@
 {% block title %} Sign Up {% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    <img src="{{ url_for('static', filename='images/' + ('pak logo.png')) }}" style="height:200px;" class="img-fluid" alt="Phone image">
-    <br />
-    <h1>Register</h1>
-    <br />
-    <label for="first_name">First Name:</label>
-    <input id="first_name" name="first_name">
-    <br>
-    <label for="last_name">Last Name:</label>
-    <input id="last_name" name="last_name">
-    <br>
-    <label for="email">Email:</label>
-    <input id="email" name="email" type="email">
-    <p id="message"></p>
-    <label for="password">Password:</label>
-    <input id="password" name="password" type="password">
-    <br>
-    <label for="avatar">Profile picture:</label>
-    <input id="avatar" name="avatar" type="file" accept="image/*">
-    <br>
-    <input type="submit" value="Sign Up">
-</form>
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <img src="{{ url_for('static', filename='images/' + ('pak logo.png')) }}" style="height:200px;" class="img-fluid" alt="Phone image">
+            <br />
+            <h1>Register</h1>
+        </div>
+        <div class="mb-3">
+            <input id="first_name" name="first_name" placeholder="First name">
+        </div>
+        <div class="mb-3">
+            <input id="last_name" name="last_name" placeholder="Last name">
+        </div>
+        <div class="mb-3">
+            <input id="email" name="email" type="email" placeholder="Email address">
+            <p id="message"></p>
+            <input id="password" name="password" type="password" placeholder="Password">
+        </div>
+        <div class="mb-3">
+            <label for="avatar">Profile picture:</label>
+            <input id="avatar" name="avatar" type="file" accept="image/*" >
+        </div>
+        <div class="mb-3">
+            <input type="submit" value="Sign Up">
+        </div>
+    </form>
+</div>
 <script>
     let emailInput = document.querySelector("#email");
     let message = document.querySelector("#message");
@@ -44,6 +49,6 @@
         }
     }
 </script>
-<a href="{{ url_for('login') }}">Already have an account? </a>
+<p>Already have an account? <a href="{{ url_for('login') }}" class="link-danger">Login</a></p>
 
 {% endblock %}
