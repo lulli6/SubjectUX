@@ -24,12 +24,14 @@ th, td {
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 1rem;
     text-align: center;
+
 }
 
 
 input {
     display: inline-block;
     line-height: 2;
+    margin-bottom: 20px;
 
 }
 
@@ -40,10 +42,3 @@ tr {
 }
 
 
-.divider:after,
-.divider:before {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: #eee;
-}
