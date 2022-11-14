@@ -1,10 +1,29 @@
-{% extends '_layout.html' %}
+﻿{% extends '_layout.html' %}
 
 {% block title %} Home {% endblock %}
-<div class="content">
-    {% block content %}
-    <a href="{{ url_for('login') }}">Login</a>
-    <br>
-    <a href="{{ url_for('add_user') }}">Sign Up</a>
-</div>
+
+{% block content %}
+
+<div class="info">
+    <h1>Year 10 Option Choices</h1>
+    <p>All students in year 10 will learn the compulsory one-year course of:</p>
+
+    <li>English</li>
+    <li>Mathematics</li>
+    <li>Science</li>
+    <li>Physical Education and Health</li>
+   
+    <p>All students in year 10 learn the compulsory half year course of Social Science.</p>
+
+    <p>Options: Year 10 students also choose from a range of subjects in two OR three other learning areas, according to their personal interest.</p>
+    
+    <li>Technology</li>
+    <li>The Arts</li>
+    <li>Languages</li>
+
+    <p>Languages are full year courses. If choosing a language student will select only one more course from a different learning area. Māori is also offered as a half year course. If selecting the half year Māori option, students should select two more courses from either Arts or Technology.</p>
+
+
+    </div>
+
     {% endblock %}

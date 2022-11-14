@@ -17,7 +17,7 @@
         <div id="navbar">
             <a href="/">Home</a>
             <a href="{{ url_for('list_subject') }}">Subjects</a>
-            <a href="#contact">Profile</a>
+            <a href="{{ url_for('view_user', user_id=session['user_id']) }}">Profile</a>
             {% if 'logged_in' not in session %}
             <a href="/login">Login</a>
             {% else %}

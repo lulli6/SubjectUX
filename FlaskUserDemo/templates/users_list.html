@@ -16,10 +16,10 @@
         <td>{{ row.last_name }}</td>
         <td>{{ row.email }}</td>
         <td>
-            <a href="/view?user_id={{ row.user_id }}">View</a>
-            <a href="/edit?user_id={{ row.user_id }}">Edit</a>
-            <a href="/delete?user_id={{ row.user_id }}" onclick="return confirm('Are you sure?')">Delete</a>
-            <a href="/chosen?user_id={{ row.user_id }}">Chosen subjects</a>
+            <a href="/view?user_id={{ row.user_id }}" class="btn btn-success">View</a>
+            <a href="/edit?user_id={{ row.user_id }}" class="btn btn-primary">Edit</a>
+            <a href="/delete?user_id={{ row.user_id }}" onclick="return confirm('Are you sure?')" class="btn btn-danger">Delete</a>
+            <a href="/chosen?user_id={{ row.user_id }}" class="btn btn-secondary">Chosen subjects</a>
         </td>
     </tr>
     {% endfor %}
